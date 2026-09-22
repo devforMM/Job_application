@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+    <h1>Welcome to your dashboard</h1>
+
+    <h1>
+        Application Form
+        <a href="/user/add_application">New Application</a>
+    </h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Job Name</th>
+                <th>Company Name</th>
+                <th>Status</th>
+                <th>Date</th>
+
+
+            </tr>
+        </thead>
+
+        <tbody>
+
+            {% for application in user.applications[:5] %}
+
+            <tr>
+                <td>{{ application.job_position }}</td>
+                <td>{{ application.company }}</td>
+                <td>{{ application.status }}</td>
+                <td>{{ application.date }}</td>
+
+              
+            </tr>
+            {% endfor %}
+
+        </tbody>
+    </table>
+
+</body>
+</html>

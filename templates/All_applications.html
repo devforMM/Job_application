@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<h1>All your jobs Applications</h1>
+<body>
+    <table>
+        <thead>
+            <tr>
+               <th>Job Position:</th>
+               <th>Company</th>
+               <th>Date</th>
+               <th>Status</th> 
+            </tr>
+    </thead>
+        <tbody>
+
+            {% for application in applications %}
+            <tr>
+                <td>{{ application.job_position }}</td>
+                <td>{{ application.company }}</td>
+                <td>{{ application.Date }}</td>
+                <td>{{ application.status }}</td>
+ 
+              <td>
+                    <details>
+                        <summary>Update</summary>
+                        <form action="/user/update_status?id_application={{application.id}}" method="post">
+                            <button type="submit"
+                                    name="status"
+                                    value="Applied">
+                                Applied
+                            </button>
+                            <button type="submit"
+                                    name="status"
+                                    value="Interview">
+                                Interview
+                            </button>
+                            <button type="submit"
+                                    name="status"
+                                    value="Rejected">
+                                Rejected
+                            </button>
+                        </form>
+                    </details>
+                </td>
+                <td>More details <a href="/user/application_details?application_id={{application.id}}">application detaisl</a></td>
+
+        </tr>
+        {% endfor %}
+  
+        </tbody>
+    </table>
+    
+</body>
+</html>

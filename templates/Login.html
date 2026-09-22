@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <form action="/user/login" method="POST">
+        Email <br>
+        <input type="text" name="email"><br><br>
+        Password
+        <input type="password" name="password"><br><br>
+        <button type="submit"> Login </button>
+    </form>
+    <p>Dont have account yet <a href="/user/register">Register</a></p>
+</body>
+</html>
