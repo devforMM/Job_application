@@ -16,10 +16,10 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      DataBase_user: ${{ secrets.DB_USER }}
-      DataBase_password: ${{ secrets.DB_PASSWORD }}
-      DataBase_name: ${{ secrets.DB_NAME }}
-      DataBase_test: ${{ secrets.DB_TEST_NAME }}
+      DataBase_user: ${{ secrets.DATABASE_USER }}
+      DataBase_password: ${{ secrets.DATABASE_PASSWORD }}
+      DataBase_name: ${{ secrets.DATABASE_NAME }}
+      DataBase_test: ${{ secrets.DATABASE_TEST }}
       SECRET_KEY: ${{ secrets.SECRET_KEY }}
       ALGO: ${{ secrets.ALGO }}
       CRYPT_SCHEMES: ${{ secrets.CRYPT_SCHEMES }}
@@ -32,9 +32,9 @@ jobs:
       postgres:
         image: postgres:16
         env:
-          POSTGRES_USER: ${{ secrets.DataBase_user }}
-          POSTGRES_PASSWORD: ${{ secrets.DataBase_password }}
-          POSTGRES_DB: ${{ secrets.DataBase_name }}
+          POSTGRES_USER: ${{ secrets.DATABASE_NAME }}
+          POSTGRES_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.DATABASE_NAME }}
         ports:
           - 5432:5432
         options: >-
