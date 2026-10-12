@@ -32,7 +32,7 @@ jobs:
       postgres:
         image: postgres:16
         env:
-          POSTGRES_USER: ${{ secrets.DATABASE_NAME }}
+          POSTGRES_USER: ${{ secrets.DATABASE_USER }}
           POSTGRES_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
           POSTGRES_DB: ${{ secrets.DATABASE_NAME }}
         ports:
@@ -55,6 +55,17 @@ jobs:
         with:
           python-version: "3.12"
           cache: pip
+      
+      - name: Créer la base de test
+        env:
+          PGPASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+        run: |
+          createdb \
+            -h 127.0.0.1 \
+            -p 5432 \
+            -U "${{ secrets.DATABASE_USER }}" \
+            "${{ secrets.DATABASE_TEST }}"
+
 
       - name: Installer les dépendances
         run: |
