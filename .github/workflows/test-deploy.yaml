@@ -15,6 +15,34 @@ jobs:
     name: Tester l'application
     runs-on: ubuntu-latest
 
+    env:
+      DataBase_user: ${{ secrets.DB_USER }}
+      DataBase_password: ${{ secrets.DB_PASSWORD }}
+      DataBase_name: ${{ secrets.DB_NAME }}
+      DataBase_test: ${{ secrets.DB_TEST_NAME }}
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      ALGO: ${{ secrets.ALGO }}
+      CRYPT_SCHEMES: ${{ secrets.CRYPT_SCHEMES }}
+
+    
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: ${{ secrets.DataBase_user }}
+          POSTGRES_PASSWORD: ${{ secrets.DataBase_password }}
+          POSTGRES_DB: ${{ secrets.DataBase_name }}
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
+    
+        
+
+
     steps:
       - name: Récupérer le code
         uses: actions/checkout@v4
