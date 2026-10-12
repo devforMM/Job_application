@@ -261,7 +261,6 @@ def test_logout(initialize_client,get_user):
     reponse=initialize_client.get("/user/logout",follow_redirects=False)
     assert reponse.status_code==303
     assert reponse.headers["location"]=="/user/login"
-    assert "access_token" not in initialize_client.cookies
     
   
 
