@@ -23,6 +23,9 @@ jobs:
       SECRET_KEY: ${{ secrets.SECRET_KEY }}
       ALGO: ${{ secrets.ALGO }}
       CRYPT_SCHEMES: ${{ secrets.CRYPT_SCHEMES }}
+      DB_HOST: 127.0.0.1
+      DB_PORT: 5432
+  
 
     
     services:

@@ -11,14 +11,14 @@ db_user=os.getenv("DataBase_user")
 db_password=os.getenv("DataBase_password")
 database_name=os.getenv("DataBase_name")
 test_db_name=os.getenv("DataBase_test")
+database_host= os.getenv("DB_HOST", "127.0.0.1")
 
-
-DB_URL = f"postgresql+psycopg://{db_user}:{db_password}@127.0.0.1:5432/{database_name}"
+DB_URL = f"postgresql+psycopg://{db_user}:{db_password}@{database_host}:5432/{database_name}"
 engine=create_engine(url=DB_URL)
 SessionMaker=sessionmaker(bind=engine,autoflush=False)
 base=declarative_base()
 
-TEST_DB_URL = f"postgresql+psycopg://{db_user}:{db_password}@127.0.0.1:5432/{test_db_name}"
+TEST_DB_URL = f"postgresql+psycopg://{db_user}:{db_password}@{database_host}:5432/{test_db_name}"
 test_engine=create_engine(url=TEST_DB_URL)
 Test_SessionMaker=sessionmaker(bind=engine,autoflush=False)
 
