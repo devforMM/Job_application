@@ -1,11 +1,27 @@
 from sqlalchemy import create_engine,Integer,Text,Column,ForeignKey
 from sqlalchemy.orm import relationship,sessionmaker,declarative_base
+import os
+
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
-DB_URL = "postgresql+psycopg://postgres:qwerty@127.0.0.1:5432/Job_application"
+db_user=os.getenv("DataBase_user")
+db_password=os.getenv("DataBase_password")
+database_name=os.getenv("DataBase_name")
+test_db_name=os.getenv("DataBase_test")
+
+
+DB_URL = f"postgresql+psycopg://{db_user}:{db_password}@127.0.0.1:5432/{database_name}"
 engine=create_engine(url=DB_URL)
 SessionMaker=sessionmaker(bind=engine,autoflush=False)
 base=declarative_base()
+
+TEST_DB_URL = f"postgresql+psycopg://{db_user}:{db_password}@127.0.0.1:5432/{test_db_name}"
+test_engine=create_engine(url=TEST_DB_URL)
+Test_SessionMaker=sessionmaker(bind=engine,autoflush=False)
+
 
 
 
@@ -36,7 +52,7 @@ class Application(base):
 
 
 base.metadata.create_all(bind=engine)
-
+base.metadata.create_all(bind=test_engine)
 
 
 

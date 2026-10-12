@@ -6,14 +6,16 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from fastapi import Form
 from fastapi import UploadFile,File
-from Database import User,Application
+from Server.Database import User,Application
 from utils_functions import *
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from Bridge import get_session
+users_dir="users_files"
+
 user_router=APIRouter()
 
-templates=Jinja2Templates("../templates")
+templates=Jinja2Templates("./templates")
 
 
 @user_router.get("/login")
@@ -61,13 +63,14 @@ def application_form(request:Request,user=Depends(get_current_user)):
 
 
 @user_router.get("/get_applications")
-def all_applications(request:Request,user=Depends(get_current_user)):
+def all_applications(request:Request,user=Depends(get_current_user),db: Session = Depends(get_session)):
     try:
+        applications = db.query(Application).filter(Application.user_id == user.id).all()
         return templates.TemplateResponse(
             request=request,
-            name="all_applications.html",
+            name="All_applications.html",
             context={
-                "applications":user.applications
+                "applications":applications
             }
 
         )
@@ -155,7 +158,7 @@ async def add_application(
     try:
         cv_content = await cv_file.read()
 
-        path = f"users_files/user-{user.id}/{job_position}"
+        path = f"{users_dir}/user-{user.id}/{job_position}"
         os.makedirs(path, exist_ok=True)
 
         file_path = f"{path}/{company}-cv.pdf"
@@ -178,12 +181,14 @@ async def add_application(
         db.add(new_application)
         db.commit()
         db.refresh(new_application)
+        
+        applications=db.query(Application).filter(Application.user_id==user.id).all()
 
         return templates.TemplateResponse(
             name="All_applications.html",
             request=request,
             context={
-                "applications": user.applications
+                "applications": applications
             }
         )
 
@@ -202,7 +207,6 @@ async def add_application(
 def register_user(db:Session=Depends(get_session), first_name=Form(...),last_name=Form(...),email=Form(...),
         password=Form(...),phone_number=Form(...)):
     try:
-        print("mama")
         new_user=User(
             first_name=first_name,last_name=last_name,email=email,password=hash_password(password),phone_number=phone_number   
         )
@@ -240,15 +244,18 @@ def application_details(request:Request,application_id:int,user=Depends(get_curr
 
 
 @user_router.get("/download_cv")
-def download_cv(application_id:int,db:Session=Depends(get_session)):
+def download_cv(application_id:int,db:Session=Depends(get_session),user=Depends(get_current_user)):
     try:
-        application=db.query(Application).filter(Application.id==application_id).first()
+        application = db.query(Application).filter(
+    Application.id == application_id,
+    Application.user_id == user.id,
+).first()
         if application:
             return FileResponse(
                 application.Cv_path,
                 media_type="application/pdf",
                 filename=f"{application.job_position}-{application.company}.cv",
-                content_disposition_type="attachement"
+                content_disposition_type="attachment"
             )
 
 
@@ -258,23 +265,27 @@ def download_cv(application_id:int,db:Session=Depends(get_session)):
 
 @user_router.get("/logout")
 def logout():
-    reponse=RedirectResponse("user/login",status_code=303)
+    reponse=RedirectResponse("/user/login",status_code=303)
     reponse.delete_cookie("access_token")
     return reponse
 
-@user_router.post("/users/delete_application")
-def delete_application(request:Request,application_id:int,user=Depends(get_current_user),db:Session=Depends(get_current_user)):
+@user_router.post("/delete_application")
+def delete_application(request:Request,application_id:int,user=Depends(get_current_user),db:Session=Depends(get_session)):
     try:
         application=db.query(Application).filter(Application.id==application_id).first()
         db.delete(application)
         db.commit()
+        applications=db.query(Application).filter(Application.user_id==user.id).all()
         return templates.TemplateResponse(
             request=request,
             name="All_applications.html",
             context={
-                "applications":user.applications
+                "applications":applications
             }
         )
 
     except Exception as e:
-        raise HTTPException(status_code=400,)
+        raise HTTPException(status_code=400,detail=f"Server Error: {e}")
+    
+
+    
