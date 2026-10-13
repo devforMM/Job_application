@@ -8,9 +8,9 @@ from Bridge  import get_session
 from sqlalchemy.orm import Session
 import os
 
-SECRET_KEY="secret_key"
-CRYPT_SCHEMES="bcrypt"
-ALGO="HS256"
+SECRET_KEY=os.getenv("SECRET_KEY")
+CRYPT_SCHEMES=os.getenv("CRYPT_SCHEMES")
+ALGO=os.getenv("ALGO")
 
 
 context=CryptContext(schemes=[CRYPT_SCHEMES],deprecated="auto")
@@ -40,7 +40,7 @@ def get_current_user(request:Request,db:Session=Depends(get_session)):
     try:
         access_token=request.cookies.get("access_token")
         if access_token:
-            user_data=jwt.decode(access_token,key=SECRET_KEY,algorithms=ALGO)
+            user_data=jwt.decode(access_token,key=SECRET_KEY,algorithms=[ALGO])
             if user_data:
                 user=db.query(User).filter(User.email==user_data["email"]).first()
                 if user:
@@ -55,5 +55,3 @@ def get_current_user(request:Request,db:Session=Depends(get_session)):
     except Exception as e:
         raise HTTPException(status_code=400,detail=f"server error : {e}")
 
-
-    
