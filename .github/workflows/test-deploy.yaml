@@ -19,6 +19,7 @@ jobs:
     env:
       DataBase_user: ${{ secrets.DATABASE_USER }}
       DataBase_password: ${{ secrets.DATABASE_PASSWORD }}
+      DataBase_name: ${{ secrets.DATABASE_TEST }}
       DataBase_test: ${{ secrets.DATABASE_TEST }}
       SECRET_KEY: ${{ secrets.SECRET_KEY }}
       ALGO: ${{ secrets.ALGO }}
