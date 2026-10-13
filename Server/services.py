@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from fastapi import Form
 from fastapi import UploadFile,File
-from Server.Database import User,Application
+from Database import User,Application
 from utils_functions import *
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates

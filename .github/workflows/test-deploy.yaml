@@ -3,7 +3,8 @@ name: Test+Deploy
 
 on:
   push:
-    branches: [dev]
+    branches: [dev,main]
+
   workflow_dispatch:
 
 env:
@@ -18,7 +19,6 @@ jobs:
     env:
       DataBase_user: ${{ secrets.DATABASE_USER }}
       DataBase_password: ${{ secrets.DATABASE_PASSWORD }}
-      DataBase_name: ${{ secrets.DATABASE_NAME }}
       DataBase_test: ${{ secrets.DATABASE_TEST }}
       SECRET_KEY: ${{ secrets.SECRET_KEY }}
       ALGO: ${{ secrets.ALGO }}
@@ -34,7 +34,7 @@ jobs:
         env:
           POSTGRES_USER: ${{ secrets.DATABASE_USER }}
           POSTGRES_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
-          POSTGRES_DB: ${{ secrets.DATABASE_NAME }}
+          POSTGRES_DB: ${{ secrets.DATABASE_TEST }}
         ports:
           - 5432:5432
         options: >-
@@ -56,15 +56,7 @@ jobs:
           python-version: "3.12"
           cache: pip
       
-      - name: Créer la base de test
-        env:
-          PGPASSWORD: ${{ secrets.DATABASE_PASSWORD }}
-        run: |
-          createdb \
-            -h 127.0.0.1 \
-            -p 5432 \
-            -U "${{ secrets.DATABASE_USER }}" \
-            "${{ secrets.DATABASE_TEST }}"
+
 
 
       - name: Installer les dépendances
