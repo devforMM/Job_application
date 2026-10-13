@@ -20,7 +20,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - job_application_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $${DataBase_user} -d $${DataBase_name}"]
       interval: 5s
@@ -28,4 +28,4 @@ services:
       retries: 5
 
 volumes:
-  postgres_data:
+  job_application_data:
