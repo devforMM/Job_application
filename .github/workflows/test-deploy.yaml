@@ -12,8 +12,35 @@ env:
 
 jobs:
   test:
+  
     name: Tester l'application
     runs-on: ubuntu-latest
+
+    env:
+      DataBase_user: ${{ secrets.DATABASE_USER }}
+      DataBase_password: ${{ secrets.DATABASE_PASSWORD }}
+      DataBase_test: ${{ secrets.DATABASE_TEST }}
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      ALGO: ${{ secrets.ALGO }}
+      CRYPT_SCHEMES: ${{ secrets.CRYPT_SCHEMES }}
+      DB_HOST: 127.0.0.1
+      DB_PORT: 5432
+  
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: ${{ secrets.DATABASE_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.DATABASE_TEST }}
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
       - name: Récupérer le code
